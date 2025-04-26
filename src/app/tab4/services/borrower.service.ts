@@ -24,5 +24,9 @@ export class BorrowerService {
         return this.http.delete(`borrower/${id}`);
     }
 
+    pagarCuota(loanId: string) {
+        return this.http.put(`lender/pagar_cuota/${loanId}`);
+    }
+
 }
 

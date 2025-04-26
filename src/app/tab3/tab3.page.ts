@@ -10,7 +10,7 @@ import { FormsModule } from '@angular/forms';
   selector: 'app-tab3',
   templateUrl: 'tab3.page.html',
   styleUrls: ['tab3.page.scss'],
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, IonContent],
 })
 export class Tab3Page implements OnInit {
 

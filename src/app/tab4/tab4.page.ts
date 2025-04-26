@@ -3,16 +3,19 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CreateBorrowerRequest, Lender, Loan } from './interfaces/IBorrower';
 import { BorrowerService } from './services/borrower.service';
+import { MessageFlashService } from '../shared/components/message-flash/message-flash.service';
+import { MessageFlashComponent } from '../shared/components/message-flash/message-flash.component';
 
 @Component({
   selector: 'app-tab4',
   templateUrl: './tab4.page.html',
   styleUrls: ['./tab4.page.scss'],
   standalone: true,
-  imports: [ CommonModule, FormsModule, ReactiveFormsModule]
+  imports: [ CommonModule, FormsModule, ReactiveFormsModule, MessageFlashComponent]
 })
 export class Tab4Page implements OnInit {
 
+  Math = Math; // Para usar Math.random en el template
   loans: Loan[] = [];
   filteredLoans: Loan[] = [];
   lenders: Lender[] = [];
@@ -24,6 +27,11 @@ export class Tab4Page implements OnInit {
   processing = false;
   searchTerm = '';
   statusFilter = 'all';
+  showPayModal = false;
+  selectedLoanForPayment: Loan | null = null;
+  processingPayment = false;
+  bankSelected = '';
+  showPaymentSuccess = false;
 
   // Mensajes
   successMessage = '';
@@ -37,7 +45,8 @@ export class Tab4Page implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private borrowerService: BorrowerService
+    private borrowerService: BorrowerService,
+    private messageFlashService: MessageFlashService
   ) {
     // Inicializar formulario
     this.createForm = this.fb.group({
@@ -71,9 +80,8 @@ export class Tab4Page implements OnInit {
         this.loading = false;
       },
       error: (err) => {
+        this.messageFlashService.danger('Error al cargar los préstamos', 2000);
         console.error('Error al cargar préstamos:', err);
-        this.errorMessage =
-          'Error al cargar los préstamos. Intente nuevamente.';
         this.loading = false;
       },
     });
@@ -87,9 +95,8 @@ export class Tab4Page implements OnInit {
         this.loading = false;
       },
       error: (err) => {
+        this.messageFlashService.danger('Error al cargar los prestamistas', 2000);
         console.error('Error al cargar prestamistas:', err);
-        this.errorMessage =
-          'Error al cargar los prestamistas. Intente nuevamente.';
         this.loading = false;
       },
     });
@@ -145,6 +152,20 @@ export class Tab4Page implements OnInit {
     this.selectedLoan = null;
   }
 
+  openPayModal(loan: Loan): void {
+    this.selectedLoanForPayment = loan;
+    this.showPayModal = true;
+    this.bankSelected = '';
+    this.showPaymentSuccess = false;
+  }
+
+  closePayModal(): void {
+    this.showPayModal = false;
+    this.selectedLoanForPayment = null;
+    this.bankSelected = '';
+    this.showPaymentSuccess = false;
+  }
+
   // Métodos para CRUD
   createLoan(): void {
     if (this.createForm.invalid) {
@@ -180,8 +201,8 @@ export class Tab4Page implements OnInit {
         }, 3000);
       },
       error: (err) => {
+        this.messageFlashService.danger(err, 2000);
         console.error('Error al crear el préstamo:', err);
-        this.errorMessage = 'Error al crear el préstamo. Intente nuevamente.';
         this.processing = false;
       },
     });
@@ -223,6 +244,27 @@ export class Tab4Page implements OnInit {
           this.errorMessage =
             'Error al cancelar el préstamo. Intente nuevamente.';
           this.processing = false;
+        },
+      });
+  }
+
+  processPayment(): void {
+    if (!this.selectedLoanForPayment || !this.bankSelected) return;
+
+    this.processingPayment = true;
+
+    this.borrowerService
+      .pagarCuota(this.selectedLoanForPayment.id.toString())
+      .subscribe({
+        next: () => {
+          this.processingPayment = false;
+          this.showPaymentSuccess = true;
+          this.loadLoans();
+        },
+        error: (err) => {
+          console.error('Error al procesar el pago:', err);
+          this.errorMessage = 'Error al procesar el pago. Intente nuevamente.';
+          this.processingPayment = false;
         },
       });
   }

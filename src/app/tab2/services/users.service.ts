@@ -17,7 +17,7 @@ export class UsersService {
     }
 
     deleteUsers(id: string) {
-        return this.http.delete(`admin/users/${id}`);
+        return this.http.put(`admin/users/v2/${id}`);
     }
 
     updateUsers(id: string, user: Partial<User>): Observable<User> {

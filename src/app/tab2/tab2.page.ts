@@ -227,6 +227,7 @@ export class Tab2Page {
         this.filteredUsers = [...this.users];
         this.processing = false;
         this.showMessage('success', 'Usuario eliminado exitosamente');
+        this.loadUsers();
         this.closeDeleteModal();
       },
       error: (err) => {
@@ -244,7 +245,7 @@ export class Tab2Page {
     const newStatus = !user.status;
 
     this.usersService
-      .updateUsers(user.id.toString(), { ...user, status: newStatus })
+      .updateUsers(user.id.toString(), { ...user, role: user.Rol.id, status: newStatus })
       .subscribe({
         next: () => {
           const index = this.users.findIndex((u) => u.id === user.id);
@@ -282,5 +283,15 @@ export class Tab2Page {
 
     return 'Campo inválido';
   }
+
+  numberOnly(event: KeyboardEvent): boolean {
+    const charCode = event.which ? event.which : event.keyCode;
+    if (charCode < 49 || charCode > 57) {
+      return false;
+    }
+    return true;
+  }
+
+  
 
 }

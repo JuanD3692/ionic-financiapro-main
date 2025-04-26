@@ -27,6 +27,15 @@
 
 :root {
     color-scheme: light;
+    --ion-text-color: #000000;
+}
+
+ion-content {
+    --background: #ffffff; /* Asegura que el fondo sea blanco */
+}
+
+body {
+    color: #000000; /* Asegura que el texto por defecto sea negro */
 }
 
 
