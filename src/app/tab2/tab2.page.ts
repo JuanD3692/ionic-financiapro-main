@@ -183,15 +183,16 @@ export class Tab2Page {
           this.filteredUsers = [...this.users];
         }
         this.processing = false;
+        this.errorMessage = ''; // Limpiar mensaje de error en caso de éxito
         this.showMessage('success', 'Usuario creado exitosamente');
         this.closeCreateModal();
         this.loadUsers();
       },
       error: (err) => {
-        console.error('Error al crear usuario:', err);
+        console.log('Error al crear usuario:', err);
         this.showMessage(
           'error',
-          'Error al crear el usuario. Intente nuevamente.'
+          err || 'Error al crear el usuario. Intente nuevamente.'
         );
         this.processing = false;
       },

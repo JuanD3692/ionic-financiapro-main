@@ -543,6 +543,10 @@
           </form>
         </div>
 
+        <div *ngIf="errorMessage" class="alert alert-danger px-4">
+          {{ errorMessage }}
+        </div>
+
         <!-- Botones de acción -->
         <div
           class="bg-gray-50 px-4 py-3 sm:px-6 flex flex-col-reverse sm:flex-row sm:justify-end gap-2"
@@ -890,6 +894,10 @@
               </p>
             </div>
           </form>
+        </div>
+
+        <div *ngIf="errorMessage" class="alert alert-danger px-4">
+          {{ errorMessage }}
         </div>
 
         <!-- Botones de acción -->
