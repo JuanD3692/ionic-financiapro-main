@@ -5,7 +5,7 @@ import { Router, RouterModule } from '@angular/router';
 import { LoginService } from './services/login.service';
 import { ILogin } from './interfaces/ILogin';
 import { IResponse } from './interfaces/IResponse';
-import { MessageFlashComponent } from "../shared/components/message-flash/message-flash.component";
+import { MessageFlashComponent } from '../shared/components/message-flash/message-flash.component';
 import { MessageFlashService } from '../shared/components/message-flash/message-flash.service';
 
 @Component({
@@ -13,13 +13,13 @@ import { MessageFlashService } from '../shared/components/message-flash/message-
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, MessageFlashComponent]
+  imports: [CommonModule, FormsModule, RouterModule, MessageFlashComponent],
 })
 export class LoginPage implements OnInit {
-
   username = '';
   password = '';
   mobileMenuOpen = false;
+  showPassword = false;
 
   constructor(
     private loginService: LoginService,
@@ -34,19 +34,24 @@ export class LoginPage implements OnInit {
   }
 
   onSubmit() {
-    const loginData: ILogin = { username: this.username, password: this.password };
+    const loginData: ILogin = {
+      username: this.username,
+      password: this.password,
+    };
 
     this.loginService.login(loginData).subscribe(
       (response: IResponse) => {
         this.messageFlashService.success('Inicio de sesión exitoso', 1000);
         this.loginService.handleLoginResponse(response);
-        this.router.navigate(['/tabs/tab1']); 
+        this.router.navigate(['/tabs/tab1']);
       },
       (error) => {
-        this.messageFlashService.danger('Usuario o contraseña incorrectos', 3000);
+        this.messageFlashService.danger(
+          'Usuario o contraseña incorrectos',
+          3000
+        );
         console.error('Error al iniciar sesión', error);
       }
     );
   }
-
 }

@@ -1,8 +1,19 @@
 import { Component } from '@angular/core';
-import { IonHeader, IonToolbar, IonTitle, IonContent } from '@ionic/angular/standalone';
+import {
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonContent,
+} from '@ionic/angular/standalone';
 import { ExploreContainerComponent } from '../explore-container/explore-container.component';
 import { Role, User } from './interfaces/IUsers';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { UsersService } from './services/users.service';
 import { CommonModule } from '@angular/common';
 
@@ -10,10 +21,9 @@ import { CommonModule } from '@angular/common';
   selector: 'app-tab2',
   templateUrl: 'tab2.page.html',
   styleUrls: ['tab2.page.scss'],
-  imports: [CommonModule, ReactiveFormsModule, FormsModule]
+  imports: [CommonModule, ReactiveFormsModule, FormsModule],
 })
 export class Tab2Page {
-
   users: User[] = [];
   roles: Role[] = [];
   filteredUsers: User[] = [];
@@ -28,6 +38,8 @@ export class Tab2Page {
   selectedUser: User | null = null;
   createForm: FormGroup;
   editForm: FormGroup;
+  public showPasswordCreate: boolean = false;
+  public showPasswordEdit: boolean = false;
 
   constructor(private fb: FormBuilder, private usersService: UsersService) {
     this.createForm = this.initForm();
@@ -245,7 +257,11 @@ export class Tab2Page {
     const newStatus = !user.status;
 
     this.usersService
-      .updateUsers(user.id.toString(), { ...user, role: user.Rol.id, status: newStatus })
+      .updateUsers(user.id.toString(), {
+        ...user,
+        role: user.Rol.id,
+        status: newStatus,
+      })
       .subscribe({
         next: () => {
           const index = this.users.findIndex((u) => u.id === user.id);
@@ -291,7 +307,4 @@ export class Tab2Page {
     }
     return true;
   }
-
-  
-
 }
