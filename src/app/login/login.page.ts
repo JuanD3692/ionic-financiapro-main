@@ -43,7 +43,7 @@ export class LoginPage implements OnInit {
       (response: IResponse) => {
         this.messageFlashService.success('Inicio de sesión exitoso', 1000);
         this.loginService.handleLoginResponse(response);
-        this.router.navigate(['/tabs/tab1']);
+        this.router.navigate(['/tabs/']);
       },
       (error) => {
         this.messageFlashService.danger(
